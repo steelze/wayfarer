@@ -1,10 +1,15 @@
-const express = require('express')
+const express = require('express');
+
 const app = express();
 
-app.get('/', (req, res) => res.json({msg: 'Hello World'}));
+app.get('/', (req, res) => res.json({ msg: 'Hello World' }));
 
 const port = process.env.PORT || 3000;
 
+/* eslint-disable no-console */
+
 app.listen(port, () => {
-  console.log(`App is running, check me out on http://localhost:${port}`);
+  console.log(`App is running on http://localhost:${port}`);
 });
+
+/* eslint-enable no-console */
