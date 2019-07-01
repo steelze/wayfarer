@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "build": "babel src -d dist",
-    "test": "./node_modules/.bin/mocha --exit --timeout 10000 --require @babel/register",
+    "test": "nyc mocha --exit --timeout 10000 --require @babel/register",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js"
   },
   "repository": {
@@ -33,11 +34,13 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/register": "^7.4.4",
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "coveralls": "^3.0.4",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.18.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1",
-    "chai-http": "^4.3.0"
+    "nyc": "^14.1.1"
   }
 }
