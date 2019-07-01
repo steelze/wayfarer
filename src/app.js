@@ -13,3 +13,5 @@ app.listen(port, () => {
 });
 
 /* eslint-enable no-console */
+
+export default app;
