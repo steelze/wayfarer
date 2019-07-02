@@ -1,8 +1,26 @@
 import express from 'express';
+import cors from 'cors';
+import auth from './routes/auth';
 
+const baseUrl = '/api/v1/';
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => res.json({ msg: 'Hello World' }));
+app.use(baseUrl, auth);
+
+app.use((req, res, next) => {
+  const err = new Error('No Route Match Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).send({
+    status: 'error',
+    error: err.message,
+  });
+});
 
 const port = process.env.PORT || 3000;
 
