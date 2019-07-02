@@ -1,4 +1,9 @@
+import bcrypt from 'bcrypt';
 import User from '../model/User';
+import Config from '../config/index';
+
+
+const { saltRounds } = Config;
 
 /**
  * @class RegisterController
@@ -6,20 +11,20 @@ import User from '../model/User';
  */
 
 export default class RegisterController {
-  static register(req, res) {
+  static register(req, res, next) {
     const {
       first_name: firstName, last_name: lastName, email, password,
     } = req.body;
-    const user = User.create({
-      firstName, lastName, email, password,
-    });
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
+    bcrypt.hash(password, saltRounds).then((hashedPassword) => {
+      const user = User.create({
+        firstName, lastName, email, hashedPassword,
+      });
+      return res.status(201).json({
+        status: 'success',
+        data: {
+          user,
+        },
+      });
+    }).catch(error => next(error));
   }
-
-  
 }

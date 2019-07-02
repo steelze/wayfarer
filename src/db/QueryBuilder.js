@@ -6,11 +6,10 @@ export default class QueryBuilder {
       first_name: data.firstName,
       last_name: data.lastName,
       is_admin: 0,
-      password: data.password,
+      password: data.hashedPassword,
       created_at: Date.now(),
     };
     table.push(user);
-    console.log(table);
     return user;
   }
 }

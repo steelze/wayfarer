@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Steelze/wayfarer#readme",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.1.1",
