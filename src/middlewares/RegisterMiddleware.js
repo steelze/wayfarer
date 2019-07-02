@@ -46,7 +46,7 @@ export default checkSchema({
       errorMessage: 'Email already exists',
       options: (value) => {
         if (!value.trim()) return false;
-        const isExist = User.exists({ email: value });   
+        const isExist = User.exists({ email: value });
         return !isExist;
       },
     },

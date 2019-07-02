@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import User from '../model/User';
 import Config from '../config/index';
 
 
-const { saltRounds } = Config;
+const { saltRounds, secret: SECRET_KEY } = Config;
 
 /**
  * @class RegisterController
@@ -19,9 +20,12 @@ export default class RegisterController {
       const user = User.create({
         firstName, lastName, email, hashedPassword,
       });
+      const { id, created_at: joined } = user;
+      const token = jwt.sign({ id, email, joined }, SECRET_KEY, { expiresIn: '100hr' });
       return res.status(201).json({
         status: 'success',
         data: {
+          token,
           user,
         },
       });

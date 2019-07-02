@@ -6,9 +6,15 @@
   "scripts": {
     "build": "babel src -d dist",
     "test": "nyc mocha --exit --timeout 10000 --require @babel/register",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
     "start": "node dist/app.js"
+  },
+  "nyc": {
+    "exclude": [
+      "src/app.js",
+      "dist"
+    ]
   },
   "repository": {
     "type": "git",
