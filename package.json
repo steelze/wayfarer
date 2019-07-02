@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src -d dist",
     "test": "mocha --exit --timeout 10000 --require @babel/register",
-    "coverage": "report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
     "start": "node dist/app.js"
   },
