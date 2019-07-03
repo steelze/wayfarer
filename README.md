@@ -1,3 +1,3 @@
-# wayfarer [![Build Status](https://travis-ci.com/Steelze/wayfarer.svg?branch=develop)](https://travis-ci.com/Steelze/wayfarer) [![Coverage Status](https://coveralls.io/repos/github/Steelze/wayfarer/badge.svg?branch=develop)](https://coveralls.io/github/Steelze/wayfarer?branch=develop)
+# wayfarer [![Build Status](https://travis-ci.com/Steelze/wayfarer.svg?branch=develop)](https://travis-ci.com/Steelze/wayfarer) [![Coverage Status](https://coveralls.io/repos/github/Steelze/wayfarer/badge.svg?branch=develop)](https://coveralls.io/github/Steelze/wayfarer?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/6b6d2e1e5f9101df5c1c/maintainability)](https://codeclimate.com/github/Steelze/wayfarer/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/6b6d2e1e5f9101df5c1c/test_coverage)](https://codeclimate.com/github/Steelze/wayfarer/test_coverage)
 
 WayFarer is a public bus transportation booking server.
