@@ -6,7 +6,7 @@ import MiddlewareErrors from '../middlewares/MiddlewareErrors';
 
 const router = express.Router();
 
-router.post('/auth/login', LoginMiddleware, MiddlewareErrors, AuthController.login);
+router.post('/auth/signin', LoginMiddleware, MiddlewareErrors, AuthController.login);
 router.post('/auth/signup', RegisterMiddleware, MiddlewareErrors, AuthController.register);
 
 export default router;
