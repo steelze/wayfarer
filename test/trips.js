@@ -15,6 +15,14 @@ const admin = {
   password: '123456',
 };
 
+const trip = {
+  bus_id: 1,
+  origin: 'Ikorodu',
+  destination: 'Maryland',
+  trip_date: '2019-06-27',
+  fare: 123,
+};
+
 let userToken;
 let adminToken;
 describe('Test Trip route', () => {
@@ -28,14 +36,14 @@ describe('Test Trip route', () => {
       });
     chai.request(app)
       .post(`${base}auth/signin`)
-      .send(user)
+      .send(admin)
       .end((err, res) => {
         adminToken = res.body.data.token;
         expect(res.status).to.equal(201);
         done();
       });
   });
-  describe('View all trips', () => {
+  describe('Test view all trips', () => {
     describe('Unauthenticated users can not view trips', () => {
       it('should respond with status 401 and error message for token absent', (done) => {
         chai.request(app)
@@ -68,6 +76,307 @@ describe('Test Trip route', () => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
             expect(res.body.data).to.have.property('trips');
+            done();
+          });
+      });
+    });
+  });
+  describe('Test trips can be created', () => {
+    describe('Users can not create trip', () => {
+      it('should respond with status 403 and error message', (done) => {
+        chai.request(app)
+          .post(`${base}trips`)
+          .set('Authorization', userToken)
+          .send(trip)
+          .end((err, res) => {
+            expect(res.status).to.equal(403);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
+            done();
+          });
+      });
+    });
+    describe('Admin cannot create trip data with invalid credentials', () => {
+      describe('Test bus id field', () => {
+        it('should respond with error for missing bus id field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'bus_id');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for empty bus id field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: '',
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'bus_id');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+      });
+      describe('Test destination field', () => {
+        it('should respond with error for missing destination field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 4,
+              origin: 'Ikorodu',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'destination');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for empty destination field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 3,
+              origin: 'Ikorodu',
+              destination: '',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'destination');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+      });
+      describe('Test trip date field', () => {
+        it('should respond with error for missing trip date field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 1,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'trip_date');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for empty trip date field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 6,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'trip_date');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for invalid trip date field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 6,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: 'HelloWorld',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'trip_date');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+      });
+      describe('Test fare field', () => {
+        it('should respond with error for missing fare field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 1,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '2019-03-16',
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'fare');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for empty fare field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 6,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '2019-08-16',
+              fare: '',
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'fare');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for invalid fare field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 6,
+              origin: 'Ikorodu',
+              destination: 'Maryland',
+              trip_date: '2019-07-08',
+              fare: '99YDa',
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'fare');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+      });
+      describe('Test origin field', () => {
+        it('should respond with error for missing origin field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 4,
+              destination: 'Maryland',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'origin');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+        it('should respond with error for empty origin field', (done) => {
+          chai.request(app)
+            .post(`${base}trips`)
+            .set('Authorization', adminToken)
+            .send({
+              bus_id: 9,
+              origin: '',
+              destination: 'Maryland',
+              trip_date: '2019-06-27',
+              fare: 123,
+            })
+            .end((err, res) => {
+              expect(res.status).to.equal(422);
+              expect(res.body).to.have.property('status', 'error');
+              expect(res.body).to.have.property('error');
+              const data = JSON.parse(res.body.error);
+              const error = data.find(key => key.field === 'origin');
+              expect(data).to.be.an('array');
+              expect(error).to.be.an('object');
+              done();
+            });
+        });
+      });
+    });
+    describe('Admin can create trip', () => {
+      it('should respond with status 201 and trip data', (done) => {
+        chai.request(app)
+          .post(`${base}trips`)
+          .set('Authorization', adminToken)
+          .send(trip)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('trip');
             done();
           });
       });

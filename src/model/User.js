@@ -14,6 +14,6 @@ export default class User extends QueryBuilder {
 
   static isAdmin(id) {
     if (!id) return false;
-    return UserSeed.find(user => user.id === id);
+    return UserSeed.find(user => user.id === id && user.is_admin === 1);
   }
 }
