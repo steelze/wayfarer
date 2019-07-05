@@ -17,6 +17,12 @@ export default class TripController {
   }
 
   static create(req, res, next) {
-
+    const trip = Trip.create(req.body);
+    return res.status(201).json({
+      status: 'success',
+      data: {
+        trip,
+      },
+    });
   }
 }
