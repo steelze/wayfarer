@@ -2,15 +2,20 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import 'chai/register-should';
 import app from '../src/app';
+import QueryBuilder from '../src/db/QueryBuilder';
 
 chai.use(chaiHttp);
 
 const base = '/api/v1/';
 const user = {
+  first_name: 'Jeffery',
+  last_name: 'Way',
   email: 'user@blog.com',
   password: '123456',
 };
 const admin = {
+  first_name: 'Admin',
+  last_name: 'Way',
   email: 'admin@blog.com',
   password: '123456',
 };
@@ -27,19 +32,22 @@ let userToken;
 let adminToken;
 describe('Test Trip route', () => {
   before((done) => {
+    QueryBuilder.truncate('users');
+    QueryBuilder.truncate('trips');
     chai.request(app)
-      .post(`${base}auth/signin`)
+      .post(`${base}auth/signup`)
       .send(user)
       .end((err, res) => {
         userToken = res.body.data.token;
         expect(res.status).to.equal(201);
       });
     chai.request(app)
-      .post(`${base}auth/signin`)
+      .post(`${base}auth/signup`)
       .send(admin)
       .end((err, res) => {
         adminToken = res.body.data.token;
         expect(res.status).to.equal(201);
+        QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
         done();
       });
   });
@@ -383,3 +391,7 @@ describe('Test Trip route', () => {
     });
   });
 });
+// after(() => {
+  // QueryBuilder.truncate('users');
+  // QueryBuilder.truncate('trips');
+// });

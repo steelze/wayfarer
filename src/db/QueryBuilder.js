@@ -46,6 +46,12 @@ export default class QueryBuilder {
     Pool.query(this.query);
   }
 
+  static truncate(table) {
+    if (!table) return false;
+    const text = `TRUNCATE ${table}`;
+    return Pool.query(text);
+  }
+
   static schema(table) {
     if (!table) return false;
     this.query = `CREATE TABLE IF NOT EXISTS ${table}`;
@@ -56,15 +62,42 @@ export default class QueryBuilder {
     const values = [];
     let text = `SELECT * FROM  ${table}`;
     if (data) {
-      text += 'WHERE ';
+      text += ' WHERE ';
       const entries = Object.entries(data);
       entries.forEach((entry, index) => {
         const counter = index + 1;
         const [key, value] = entry;
         text += `${key} = $${counter} AND `;
         values.push(value);
-        text = text.replace(/ AND \s*$/, '');
       });
+      text = text.replace(/ AND \s*$/, '');
+    }
+    return Pool.query(text, values);
+  }
+
+  static update(table, data, params) {
+    const values = [];
+    let counter = 0;
+    let text = `UPDATE ${table}`;
+    text += ' SET ';
+    const entries = Object.entries(data);
+    entries.forEach((entry) => {
+      counter += 1;
+      const [key, value] = entry;
+      text += `${key} = $${counter}, `;
+      values.push(value);
+    });
+    text = text.replace(/, \s*$/, '');
+    if (params) {
+      text += ' WHERE ';
+      const options = Object.entries(params);
+      options.forEach((option) => {
+        counter += 1;
+        const [key, value] = option;
+        text += `${key} = $${counter} AND `;
+        values.push(value);
+      });
+      text = text.replace(/ AND \s*$/, '');
     }
     return Pool.query(text, values);
   }

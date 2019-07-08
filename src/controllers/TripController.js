@@ -1,4 +1,3 @@
-import Trip from '../model/Trip';
 import QueryBuilder from '../db/QueryBuilder';
 
 /**
@@ -10,11 +9,11 @@ export default class TripController {
   static async view(req, res, next) {
     try {
       const data = await QueryBuilder.select('trips');
-      const trip = await data.rows[0];
+      const trips = await data.rows;
       return res.status(200).json({
         status: 'success',
         data: {
-          trip,
+          trips,
         },
       });
     } catch (error) {
