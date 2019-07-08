@@ -1,13 +1,22 @@
 import { Pool } from 'pg';
 import Config from '../config/index';
 
-const { 
+const {
   dbuser, dbpass, dbhost, dbname, dbport,
 } = Config;
 
-const connectionString = `postgresql://${dbuser}:${dbpass}@${dbhost}:${dbport}/${dbname}`;
+let ssl = false;
+let connectionString;
+
+const env = process.env.NODE_ENV || 'development';
+if (env === 'development') {
+  connectionString = `postgresql://${dbuser}:${dbpass}@${dbhost}:${dbport}/${dbname}`;
+} else {
+  connectionString = process.env.DATABASE_URL;
+  ssl = true;
+}
+
 export default new Pool({
   connectionString,
+  ssl,
 });
-
-// const connectionString = 'postgresql://edu1:admin@123@localhost:5432/stackoverflow';
