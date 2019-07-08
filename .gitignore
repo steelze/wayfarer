@@ -3,3 +3,4 @@ dist
 .nyc_output
 debug.log
 coverage
+.env
