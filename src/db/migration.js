@@ -9,3 +9,13 @@ QueryBuilder.schema('users').create({
   is_admin: 'BOOLEAN DEFAULT FALSE NOT NULL',
   created_at: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
 });
+
+QueryBuilder.schema('trips').create({
+  id: 'SERIAL PRIMARY KEY',
+  bus_id: 'INT NOT NULL',
+  origin: 'VARCHAR(100) NOT NULL',
+  destination: 'VARCHAR(100) UNIQUE NOT NULL',
+  trip_date: 'DATE NOT NULL',
+  fare: 'FLOAT NOT NULL',
+  status: 'BOOLEAN DEFAULT TRUE',
+});

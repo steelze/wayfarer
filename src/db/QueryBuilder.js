@@ -1,18 +1,36 @@
 import Pool from './config';
 
 export default class QueryBuilder {
+  static exists(table, data) {
+    let text = `SELECT 1 FROM  ${table} WHERE `;
+    const values = [];
+    const entries = Object.entries(data);
+    entries.forEach((entry, index) => {
+      const counter = index + 1;
+      const [key, value] = entry;
+      text += `${key} = $${counter} AND `;
+      values.push(value);
+    });
+    text = text.replace(/ AND \s*$/, '');
+    text += ' LIMIT 1';
+    return Pool.query(text, values);
+  }
+
   static insert(table, data) {
-    const user = {
-      id: (table.length + 1),
-      email: data.email,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      is_admin: 0,
-      password: data.hashedPassword,
-      created_at: Date.now(),
-    };
-    table.push(user);
-    return user;
+    let text = `INSERT INTO ${table}(`;
+    const values = [];
+    const placeholders = [];
+    const entries = Object.entries(data);
+    entries.forEach((entry, index) => {
+      const counter = index + 1;
+      const [key, value] = entry;
+      text += `${key}, `;
+      values.push(value);
+      placeholders.push(`$${counter}`);
+    });
+    text = text.replace(/,\s*$/, '');
+    text += `) VALUES (${placeholders}) RETURNING *`;
+    return Pool.query(text, values);
   }
 
   static create(props) {
@@ -32,5 +50,22 @@ export default class QueryBuilder {
     if (!table) return false;
     this.query = `CREATE TABLE IF NOT EXISTS ${table}`;
     return this;
+  }
+
+  static select(table, data) {
+    const values = [];
+    let text = `SELECT * FROM  ${table}`;
+    if (data) {
+      text += 'WHERE ';
+      const entries = Object.entries(data);
+      entries.forEach((entry, index) => {
+        const counter = index + 1;
+        const [key, value] = entry;
+        text += `${key} = $${counter} AND `;
+        values.push(value);
+        text = text.replace(/ AND \s*$/, '');
+      });
+    }
+    return Pool.query(text, values);
   }
 }

@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from '../model/User';
 import Config from '../config/index';
 import ErrorHandler from '../util/ErrorHandler';
-
+import QueryBuilder from '../db/QueryBuilder';
 
 const { saltRounds, secret: SECRET_KEY } = Config;
 
@@ -13,14 +12,16 @@ const { saltRounds, secret: SECRET_KEY } = Config;
  */
 
 export default class AuthController {
-  static register(req, res, next) {
+  static async register(req, res, next) {
     const {
-      first_name: firstName, last_name: lastName, email, password,
+      first_name, last_name, email, password,
     } = req.body;
-    bcrypt.hash(password, saltRounds).then((hashedPassword) => {
-      const user = User.create({
-        firstName, lastName, email, hashedPassword,
+    try {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const data = await QueryBuilder.insert('users', {
+        first_name, last_name, email, password: hashedPassword,
       });
+      const user = await data.rows[0];
       const { id, created_at: joined } = user;
       const token = AuthController.getToken({ id, email, joined });
       return res.status(201).json({
@@ -30,27 +31,33 @@ export default class AuthController {
           user,
         },
       });
-    }).catch(error => next(error));
+    } catch (error) {
+      return next(error);
+    }
   }
 
-  static login(req, res, next) {
+  static async login(req, res, next) {
     const {
       email, password,
     } = req.body;
-    const user = User.exists({ email });
-    if (!user) return next(ErrorHandler.error('Invalid credentials', 422));
-    return bcrypt.compare(password, user.password).then((match) => {
+    try {
+      const data = await QueryBuilder.select('users', { email });
+      const user = await data.rows[0];
+      if (!user) return next(ErrorHandler.error('Invalid credentials', 422));
+      const match = await bcrypt.compare(password, user.password);
       if (!match) return next(ErrorHandler.error('Invalid credentials', 422));
       const { id, created_at: joined } = user;
       const token = AuthController.getToken({ id, email, joined });
-      return res.status(201).json({
+      return res.status(200).json({
         status: 'success',
         data: {
           token,
           user,
         },
       });
-    }).catch(error => next(error));
+    } catch (error) {
+      return next(error);
+    }
   }
 
   static getToken(payload) {
