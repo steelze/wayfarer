@@ -5,7 +5,7 @@ cache: npm
 services:
   - postgresql
 env:
-  - DB_USERNAME=admin1 DB_PASSWORD=admin@123 DBNAME=wayfarer
+  - DB_USER=admin1 DB_PASS=admin@123 DB_NAME=wayfarer DB_HOST=127.0.0.1 DB_PORT=5432 JWT_SECRET=Q0Jy4ulhlY1uWRuYkiFWnlTAuOXxOCgc SALT_ROUNDS=10
 before_script:
   - psql -c "create USER admin1 WITH PASSWORD 'admin@123';" -U postgres
   - psql -c "create database wayfarer;" -U postgres
