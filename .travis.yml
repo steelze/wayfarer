@@ -4,6 +4,8 @@ node_js:
 cache: npm
 services:
   - postgresql
+env:
+  - DB_USERNAME=admin1 DB_PASSWORD=admin@123 DBNAME=wayfarer
 before_script:
   - psql -c "create USER admin1 WITH PASSWORD 'admin@123';" -U postgres
   - psql -c "create database wayfarer;" -U postgres
