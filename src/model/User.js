@@ -9,7 +9,7 @@ export default class User extends QueryBuilder {
   }
 
   static create(data) {
-    return super.create(UserSeed, data);
+    return super.insert(UserSeed, data);
   }
 
   static isAdmin(id) {

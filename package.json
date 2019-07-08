@@ -8,6 +8,7 @@
     "test": "nyc --reporter=lcov mocha --colors --exit --timeout 10000 --require @babel/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
+    "migration": "babel-node src/db/migration.js",
     "start": "node dist/app.js"
   },
   "nyc": {
@@ -37,7 +38,8 @@
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.1.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
