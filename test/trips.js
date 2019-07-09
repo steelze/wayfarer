@@ -391,7 +391,3 @@ describe('Test Trip route', () => {
     });
   });
 });
-// after(() => {
-  // QueryBuilder.truncate('users');
-  // QueryBuilder.truncate('trips');
-// });

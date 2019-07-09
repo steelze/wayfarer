@@ -19,3 +19,10 @@ QueryBuilder.schema('trips').create({
   fare: 'FLOAT NOT NULL',
   status: 'BOOLEAN DEFAULT TRUE',
 });
+
+QueryBuilder.schema('bookings').create({
+  id: 'SERIAL PRIMARY KEY',
+  user_id: 'INT NOT NULL',
+  trip_id: 'VARCHAR(100) NOT NULL',
+  seat_number: 'INT NOT NULL',
+});

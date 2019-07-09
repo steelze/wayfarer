@@ -61,6 +61,6 @@ export default class AuthController {
   }
 
   static getToken(payload) {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '100hr' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1hr' });
   }
 }
