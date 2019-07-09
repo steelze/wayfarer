@@ -101,4 +101,8 @@ export default class QueryBuilder {
     }
     return Pool.query(text, values);
   }
+
+  static raw(query, values) {
+    return Pool.query(query, values);
+  }
 }

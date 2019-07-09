@@ -1,4 +1,5 @@
 import QueryBuilder from '../db/QueryBuilder';
+import ErrorHandler from '../util/ErrorHandler';
 
 /**
  * @class TripController
@@ -11,7 +12,8 @@ export default class BookingController {
       const { user_id } = req.body;
       const query = await QueryBuilder.select('users', { id: user_id, is_admin: true });
       const user = await query.rows[0];
-      const data = (user) ? await QueryBuilder.select('bookings', { user_id, is_admin: true }) : await QueryBuilder.select('bookings');
+      const data = (user) ? await QueryBuilder.raw(`SELECT bookings.id AS booking_id, trip_id, user_id, seat_number, trips.bus_id, trips.trip_date, users.first_name, users.last_name, users.email FROM bookings INNER JOIN trips on bookings.trip_id = trips.id 
+      LEFT JOIN users on bookings.user_id = users.id`) : await QueryBuilder.raw('SELECT bookings.id AS booking_id, trip_id, user_id, seat_number, trips.bus_id, trips.trip_date, users.first_name, users.last_name, users.email FROM bookings INNER JOIN trips on bookings.trip_id = trips.id LEFT JOIN users on bookings.user_id = users.id  WHERE bookings.user_id = $1 ', [user_id]);
       const bookings = await data.rows;
       return res.status(200).json({
         status: 'success',
@@ -26,19 +28,52 @@ export default class BookingController {
 
   static async create(req, res, next) {
     const {
-      bus_id, origin, destination, trip_date, fare,
+      seat_number, trip_id, user_id,
     } = req.body;
     try {
-      const data = await QueryBuilder.insert('trips', {
-        bus_id, origin, destination, trip_date, fare,
+      const trip = await BookingController.checkTripExist(trip_id, next);
+      if (!trip) return next(ErrorHandler.error('Trip not found', 404));
+      const { bus_id } = trip;
+      const query = await QueryBuilder.select('buses', { id: bus_id });
+      const bus = query.rows[0];
+      const { capacity } = bus;
+      if (seat_number > capacity) return next(ErrorHandler.error(`Exceeded maximum seat number of bus. Max(${capacity})`, 422));
+
+      const isSeatAvailable = await BookingController.isSeatAvailable(trip_id, seat_number, next);
+      if (!isSeatAvailable) return next(ErrorHandler.error('Seat not available', 422));
+      const data = await QueryBuilder.insert('bookings', {
+        user_id, trip_id, seat_number,
       });
-      const trip = await data.rows[0];
+      const booking = data.rows[0];
+      booking.origin = trip.origin;
+      booking.destination = trip.destination;
+      booking.trip_date = trip.trip_date;
+      booking.fare = trip.fare;
       return res.status(201).json({
         status: 'success',
         data: {
-          trip,
+          booking,
         },
       });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  static async checkTripExist(id, next) {
+    try {
+      const data = await QueryBuilder.select('trips', { id });
+      const trip = data.rows[0];
+      return (trip) || false;
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  static async isSeatAvailable(trip_id, seat_number, next) {
+    try {
+      const data = await QueryBuilder.select('bookings', { trip_id, seat_number });
+      return !(data.rowCount);
     } catch (error) {
       return next(error);
     }

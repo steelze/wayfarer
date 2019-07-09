@@ -23,6 +23,15 @@ QueryBuilder.schema('trips').create({
 QueryBuilder.schema('bookings').create({
   id: 'SERIAL PRIMARY KEY',
   user_id: 'INT NOT NULL',
-  trip_id: 'VARCHAR(100) NOT NULL',
+  trip_id: 'INT NOT NULL',
   seat_number: 'INT NOT NULL',
+});
+
+QueryBuilder.schema('buses').create({
+  id: 'SERIAL PRIMARY KEY',
+  number_plate: 'VARCHAR(100) NOT NULL',
+  manufacturer: 'VARCHAR(100) NOT NULL',
+  model: 'VARCHAR(100) NOT NULL',
+  year: 'VARCHAR(100) NOT NULL',
+  capacity: 'INT NOT NULL',
 });
