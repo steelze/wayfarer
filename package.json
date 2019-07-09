@@ -8,7 +8,7 @@
     "test": "nyc --reporter=lcov mocha --colors --exit --timeout 10000 --require @babel/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
-    "migration": "node src/db/migration.js",
+    "migration": "babel-node src/db/migration.js",
     "start": "node dist/app.js"
   },
   "nyc": {
