@@ -9,7 +9,9 @@ export default function (req, res, next) {
   const token = req.headers.authorization;
   if (!token) return next(ErrorHandler.error('Unauthenticated user', 401));
   try {
-    jwt.verify(token, SECRET_KEY);
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const { id } = decoded;
+    req.body.user_id = id;
     return next();
   } catch (error) {
     return next(ErrorHandler.error(error.message, 401));
