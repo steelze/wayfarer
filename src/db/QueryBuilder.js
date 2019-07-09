@@ -75,6 +75,23 @@ export default class QueryBuilder {
     return Pool.query(text, values);
   }
 
+  static delete(table, data) {
+    const values = [];
+    let text = `DELETE FROM  ${table}`;
+    if (data) {
+      text += ' WHERE ';
+      const entries = Object.entries(data);
+      entries.forEach((entry, index) => {
+        const counter = index + 1;
+        const [key, value] = entry;
+        text += `${key} = $${counter} AND `;
+        values.push(value);
+      });
+      text = text.replace(/ AND \s*$/, '');
+    }
+    return Pool.query(text, values);
+  }
+
   static update(table, data, params) {
     const values = [];
     let counter = 0;

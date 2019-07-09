@@ -60,6 +60,25 @@ export default class BookingController {
     }
   }
 
+  static async delete(req, res, next) {
+    const { user_id } = req.body;
+    const { id } = req.params;
+    try {
+      const query = await QueryBuilder.select('bookings', { id, user_id });
+      const booking = query.rows[0];
+      if (!booking) return next(ErrorHandler.error('Booking not found', 404));
+      await QueryBuilder.delete('bookings', { id, user_id });
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          message: 'Booking deleted successfully',
+        },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   static async checkTripExist(id, next) {
     try {
       const data = await QueryBuilder.select('trips', { id });
