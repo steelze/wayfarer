@@ -1,5 +1,5 @@
 import { checkSchema } from 'express-validator';
-import User from '../model/User';
+import QueryBuilder from '../db/QueryBuilder';
 
 export default checkSchema({
   first_name: {
@@ -44,10 +44,14 @@ export default checkSchema({
     },
     custom: {
       errorMessage: 'Email already exists',
-      options: (value) => {
+      options: async (value) => {
         if (!value.trim()) return false;
-        const isExist = User.exists({ email: value });
-        return !isExist;
+        const data = await QueryBuilder.exists('users', { email: value });
+        const isExist = await data.rowCount;
+        if (isExist) {
+          return Promise.reject();
+        }
+        return false;
       },
     },
     isEmail: {

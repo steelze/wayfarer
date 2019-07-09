@@ -2,6 +2,7 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import 'chai/register-should';
 import app from '../src/app';
+import QueryBuilder from '../src/db/QueryBuilder';
 
 chai.use(chaiHttp);
 
@@ -12,6 +13,7 @@ const user = {
 };
 
 describe('Test Login route', () => {
+  before(() => QueryBuilder.truncate('users'));
   describe('Test user cannot signin with invalid credentials', () => {
     describe('Test email field', () => {
       it('should respond with error for missing email field', (done) => {
@@ -155,12 +157,26 @@ describe('Test Login route', () => {
     });
   });
   describe('Test user can signin with valid credentials', () => {
+    beforeEach((done) => {
+      chai.request(app)
+        .post(`${base}auth/signup`)
+        .send({
+          first_name: 'Way',
+          last_name: 'Jeff',
+          email: 'admin@blog.com',
+          password: '123456',
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(201);
+          done();
+        });
+    });
     it('should respond with status 201, token and user data', (done) => {
       chai.request(app)
         .post(`${base}auth/signin`)
         .send(user)
         .end((err, res) => {
-          expect(res.status).to.equal(201);
+          expect(res.status).to.equal(200);
           expect(res.body).to.have.property('status', 'success');
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.all.keys('token', 'user');
@@ -169,8 +185,23 @@ describe('Test Login route', () => {
           done();
         });
     });
+    afterEach(() => QueryBuilder.truncate('users'));
   });
   describe('Catch error in signin controlller', () => {
+    beforeEach((done) => {
+      chai.request(app)
+        .post(`${base}auth/signup`)
+        .send({
+          first_name: 'Way',
+          last_name: 'Jeff',
+          email: 'admin@blog.com',
+          password: '123456',
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(201);
+          done();
+        });
+    });
     it('should respond with status 500 and error message', (done) => {
       chai.request(app)
         .post(`${base}auth/signin`)
@@ -185,5 +216,6 @@ describe('Test Login route', () => {
           done();
         });
     });
+    afterEach(() => QueryBuilder.truncate('users'));
   });
 });
