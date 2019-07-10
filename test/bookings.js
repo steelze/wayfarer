@@ -13,15 +13,14 @@ const user = {
   email: 'user@blog.com',
   password: '123456',
 };
-const admin = {
-  first_name: 'Admin',
-  last_name: 'Way',
-  email: 'admin@blog.com',
-  password: '123456',
+
+const booking = {
+  seat_number: 1,
+  trip_id: 1,
 };
 
-let userToken;
-let adminToken;
+let user_token;
+
 describe('Test booking route', () => {
   before((done) => {
     QueryBuilder.truncate('users');
@@ -31,16 +30,11 @@ describe('Test booking route', () => {
       .post(`${base}auth/signup`)
       .send(user)
       .end((err, res) => {
-        userToken = res.body.data.token;
+        user_token = res.body.data.token;
         expect(res.status).to.equal(201);
-      });
-    chai.request(app)
-      .post(`${base}auth/signup`)
-      .send(admin)
-      .end((err, res) => {
-        adminToken = res.body.data.token;
-        expect(res.status).to.equal(201);
-        QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
+        QueryBuilder.insert('trips', {
+          bus_id: 1, origin: 'Ikorodu', destination: 'Maryland', trip_date: '2019-06-27', fare: 123,
+        });
         done();
       });
   });
@@ -72,7 +66,7 @@ describe('Test booking route', () => {
       it('should respond with status 200 and all bookings data', (done) => {
         chai.request(app)
           .get(`${base}bookings`)
-          .set('Authorization', userToken)
+          .set('Authorization', user_token)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -80,6 +74,66 @@ describe('Test booking route', () => {
             done();
           });
       });
+    });
+  });
+  describe('Create bookings', () => {
+    describe('Authenticated users can book a seat', () => {
+      it('should respond with status 201 and booking data', (done) => {
+        chai.request(app)
+          .post(`${base}bookings`)
+          .set('Authorization', user_token)
+          .send(booking)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('booking');
+            done();
+          });
+      });
+    });
+    describe('Authenticated users cannot book an already booked seat', () => {
+      it('should respond with status 422 and booking data', (done) => {
+        chai.request(app)
+          .post(`${base}bookings`)
+          .set('Authorization', user_token)
+          .send(booking)
+          .end((err, res) => {
+            expect(res.status).to.equal(422);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
+            done();
+          });
+      });
+    });
+    describe('Authenticated users cannot book for a non existing trip', () => {
+      it('should respond with status 404', (done) => {
+        chai.request(app)
+          .post(`${base}bookings`)
+          .set('Authorization', user_token)
+          .send({
+            seat_number: 1,
+            trip_id: 1000009,
+          })
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
+            done();
+          });
+      });
+    });
+  });
+  describe('Authenticated users can delete their booking', () => {
+    it('should respond with status 200', (done) => {
+      chai.request(app)
+        .delete(`${base}bookings/1`)
+        .set('Authorization', user_token)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('status', 'success');
+          expect(res.body.data).to.have.property('message');
+          done();
+        });
     });
   });
 });

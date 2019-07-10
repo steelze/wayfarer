@@ -48,7 +48,7 @@ export default class QueryBuilder {
 
   static truncate(table) {
     if (!table) return false;
-    const text = `TRUNCATE ${table}`;
+    const text = `TRUNCATE ${table} RESTART IDENTITY`;
     return Pool.query(text);
   }
 

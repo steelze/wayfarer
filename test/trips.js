@@ -28,8 +28,10 @@ const trip = {
   fare: 123,
 };
 
-let userToken;
-let adminToken;
+let user_token;
+let admin_token;
+let trip_id;
+
 describe('Test Trip route', () => {
   before((done) => {
     QueryBuilder.truncate('users');
@@ -38,14 +40,14 @@ describe('Test Trip route', () => {
       .post(`${base}auth/signup`)
       .send(user)
       .end((err, res) => {
-        userToken = res.body.data.token;
+        user_token = res.body.data.token;
         expect(res.status).to.equal(201);
       });
     chai.request(app)
       .post(`${base}auth/signup`)
       .send(admin)
       .end((err, res) => {
-        adminToken = res.body.data.token;
+        admin_token = res.body.data.token;
         expect(res.status).to.equal(201);
         QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
         done();
@@ -79,7 +81,7 @@ describe('Test Trip route', () => {
       it('should respond with status 200 and all trips data', (done) => {
         chai.request(app)
           .get(`${base}trips`)
-          .set('Authorization', userToken)
+          .set('Authorization', user_token)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -94,7 +96,7 @@ describe('Test Trip route', () => {
       it('should respond with status 403 and error message', (done) => {
         chai.request(app)
           .post(`${base}trips`)
-          .set('Authorization', userToken)
+          .set('Authorization', user_token)
           .send(trip)
           .end((err, res) => {
             expect(res.status).to.equal(403);
@@ -109,7 +111,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing bus id field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               origin: 'Ikorodu',
               destination: 'Maryland',
@@ -130,7 +132,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty bus id field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: '',
               origin: 'Ikorodu',
@@ -154,7 +156,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing destination field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 4,
               origin: 'Ikorodu',
@@ -175,7 +177,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty destination field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 3,
               origin: 'Ikorodu',
@@ -199,7 +201,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 1,
               origin: 'Ikorodu',
@@ -220,7 +222,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -242,7 +244,7 @@ describe('Test Trip route', () => {
         it('should respond with error for invalid trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -266,7 +268,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 1,
               origin: 'Ikorodu',
@@ -287,7 +289,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -309,7 +311,7 @@ describe('Test Trip route', () => {
         it('should respond with error for invalid fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -333,7 +335,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing origin field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 4,
               destination: 'Maryland',
@@ -354,7 +356,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty origin field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', adminToken)
+            .set('Authorization', admin_token)
             .send({
               bus_id: 9,
               origin: '',
@@ -379,12 +381,39 @@ describe('Test Trip route', () => {
       it('should respond with status 201 and trip data', (done) => {
         chai.request(app)
           .post(`${base}trips`)
-          .set('Authorization', adminToken)
+          .set('Authorization', admin_token)
           .send(trip)
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('status', 'success');
             expect(res.body.data).to.have.property('trip');
+            trip_id = res.body.data.trip.id;
+            done();
+          });
+      });
+    });
+    describe('Admin can cancel trip', () => {
+      it('should respond with status 200', (done) => {
+        chai.request(app)
+          .patch(`${base}trips/${trip_id}`)
+          .set('Authorization', admin_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('message');
+            done();
+          });
+      });
+    });
+    describe('User cannot cancel trip', () => {
+      it('should respond with status 403', (done) => {
+        chai.request(app)
+          .patch(`${base}trips/${trip_id}`)
+          .set('Authorization', user_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(403);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
             done();
           });
       });
