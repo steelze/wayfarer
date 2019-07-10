@@ -21,7 +21,7 @@ export default class AuthController {
       const data = await QueryBuilder.insert('users', {
         first_name, last_name, email, password: hashedPassword,
       });
-      const user = await data.rows[0];
+      const user = data.rows[0];
       const { id, created_at: joined } = user;
       const token = AuthController.getToken({ id, email, joined });
       return res.status(201).json({
@@ -42,7 +42,7 @@ export default class AuthController {
     } = req.body;
     try {
       const data = await QueryBuilder.select('users', { email });
-      const user = await data.rows[0];
+      const user = data.rows[0];
       if (!user) return next(ErrorHandler.error('Invalid credentials', 422));
       const match = await bcrypt.compare(password, user.password);
       if (!match) return next(ErrorHandler.error('Invalid credentials', 422));

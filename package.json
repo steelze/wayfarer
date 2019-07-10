@@ -9,7 +9,11 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
     "migration": "babel-node src/db/migration.js",
+    "refresh": "babel-node src/db/refresh.js",
     "seed": "babel-node src/db/seed.js",
+    "migration-live": "node dist/db/migration.js",
+    "refresh-live": "node dist/db/refresh.js",
+    "seed-live": "node dist/db/seed.js",
     "start": "node dist/app.js"
   },
   "nyc": {

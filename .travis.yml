@@ -9,6 +9,7 @@ env:
 before_script:
   - psql -c "create USER admin1 WITH PASSWORD 'admin@123';" -U postgres
   - psql -c "create database wayfarer;" -U postgres
+  - npm run refresh
   - npm run migration
   - npm run seed
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

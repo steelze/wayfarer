@@ -10,7 +10,7 @@ export default class TripController {
   static async view(req, res, next) {
     try {
       const data = await QueryBuilder.select('trips');
-      const trips = await data.rows;
+      const trips = data.rows;
       return res.status(200).json({
         status: 'success',
         data: {
@@ -30,7 +30,7 @@ export default class TripController {
       const data = await QueryBuilder.insert('trips', {
         bus_id, origin, destination, trip_date, fare,
       });
-      const trip = await data.rows[0];
+      const trip = data.rows[0];
       return res.status(201).json({
         status: 'success',
         data: {

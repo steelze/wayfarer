@@ -38,16 +38,16 @@ export default checkSchema({
   trip_date: {
     in: ['body'],
     exists: {
-      errorMessage: 'Trip Date is required',
+      errorMessage: 'Trip date is required',
     },
     trim: true,
     isEmpty: {
-      errorMessage: 'Trip Date cannot be empty',
+      errorMessage: 'Trip date cannot be empty',
       negated: true,
     },
     // https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
     custom: {
-      errorMessage: 'Fare is invalid',
+      errorMessage: 'Invalid trip date',
       options: (value) => {
         if (!value.trim()) return false;
         const regex = /^\d{4}-\d{1,2}-\d{1,2}$/;
