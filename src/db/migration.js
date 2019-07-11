@@ -32,6 +32,6 @@ QueryBuilder.schema('buses').create({
   number_plate: 'VARCHAR(100) NOT NULL',
   manufacturer: 'VARCHAR(100) NOT NULL',
   model: 'VARCHAR(100) NOT NULL',
-  year: 'VARCHAR(100) NOT NULL',
+  year: 'INT NOT NULL',
   capacity: 'INT NOT NULL',
 });

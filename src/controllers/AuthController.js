@@ -22,8 +22,10 @@ export default class AuthController {
         first_name, last_name, email, password: hashedPassword,
       });
       const user = data.rows[0];
-      const { id, created_at: joined } = user;
-      const token = AuthController.getToken({ id, email, joined });
+      const { id, created_at: joined, is_admin } = user;
+      const token = AuthController.getToken({
+        id, email, joined, is_admin,
+      });
       return res.status(201).json({
         status: 'success',
         data: {
@@ -46,8 +48,8 @@ export default class AuthController {
       if (!user) return next(ErrorHandler.error('Invalid credentials', 422));
       const match = await bcrypt.compare(password, user.password);
       if (!match) return next(ErrorHandler.error('Invalid credentials', 422));
-      const { id, created_at: joined } = user;
-      const token = AuthController.getToken({ id, email, joined });
+      const { id, created_at: joined, is_admin } = user;
+      const token = AuthController.getToken({ id, email, joined, is_admin });
       return res.status(200).json({
         status: 'success',
         data: {
