@@ -51,6 +51,34 @@ describe('Test Buses route', () => {
       });
     await QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
   });
+  describe('Test buses can be viewed', () => {
+    describe('Users can not view buses', () => {
+      it('should respond with status 403 and error message', (done) => {
+        chai.request(app)
+          .get(`${base}buses`)
+          .set('Authorization', user_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(403);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
+            done();
+          });
+      });
+    });
+    describe('Admins can view buses', () => {
+      it('should respond with status 200 and error message', (done) => {
+        chai.request(app)
+          .get(`${base}buses`)
+          .set('Authorization', admin_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('buses');
+            done();
+          });
+      });
+    });
+  });
   describe('Test buses can be created', () => {
     describe('Users can not create buses', () => {
       it('should respond with status 403 and error message', (done) => {
