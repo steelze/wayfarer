@@ -59,4 +59,28 @@ export default class TripController {
       return next(error);
     }
   }
+
+  static async search(req, res, next) {
+    const { origin, destination } = req.query;
+    try {
+      if (!origin && !destination) return next(ErrorHandler.error('Origin or destination required', 422));
+      let query;
+      if (origin && destination) {
+        query = await QueryBuilder.raw('SELECT * from trips WHERE origin ILIKE $1 AND destination ILIKE $2', [origin, destination]);
+      } else if (origin) {
+        query = await QueryBuilder.raw('SELECT * from trips WHERE origin ILIKE $1', [origin]);
+      } else {
+        query = await QueryBuilder.raw('SELECT * from trips WHERE destination ILIKE $1', [destination]);
+      }
+      const trips = query.rows;
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          trips,
+        },
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
