@@ -47,10 +47,19 @@ describe('Test Trip route', () => {
       .post(`${base}auth/signup`)
       .send(admin)
       .then((res) => {
-        admin_token = res.body.data.token;
         expect(res.status).to.equal(201);
       });
     await QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
+    await chai.request(app)
+      .post(`${base}auth/signin`)
+      .send({
+        email: 'admin@blog.com',
+        password: '123456',
+      })
+      .then((res) => {
+        admin_token = res.body.data.token;
+        expect(res.status).to.equal(200);
+      });
   });
   describe('Test view all trips', () => {
     describe('Unauthenticated users can not view trips', () => {
@@ -427,6 +436,17 @@ describe('Test Trip route', () => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
             expect(res.body.data).to.have.property('trips');
+            done();
+          });
+      });
+      it('should respond with error for no query string passed', (done) => {
+        chai.request(app)
+          .get(`${base}trips/search`)
+          .set('Authorization', user_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(422);
+            expect(res.body).to.have.property('status', 'error');
+            expect(res.body).to.have.property('error');
             done();
           });
       });
