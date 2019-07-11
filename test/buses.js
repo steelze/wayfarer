@@ -46,10 +46,19 @@ describe('Test Buses route', () => {
       .post(`${base}auth/signup`)
       .send(admin)
       .then((res) => {
-        admin_token = res.body.data.token;
         expect(res.status).to.equal(201);
       });
     await QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
+    await chai.request(app)
+      .post(`${base}auth/signin`)
+      .send({
+        email: 'admin@blog.com',
+        password: '123456',
+      })
+      .then((res) => {
+        admin_token = res.body.data.token;
+        expect(res.status).to.equal(200);
+      });
   });
   describe('Test buses can be viewed', () => {
     describe('Users can not view buses', () => {

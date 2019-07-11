@@ -44,14 +44,15 @@ export default checkSchema({
     },
     custom: {
       errorMessage: 'Email already exists',
-      options: async (value) => {
+      options: (value) => {
         if (!value.trim()) return false;
-        const data = await QueryBuilder.exists('users', { email: value });
-        const isExist = await data.rowCount;
-        if (isExist) {
-          return Promise.reject();
-        }
-        return false;
+        return QueryBuilder.exists('users', { email: value }).then((data) => {
+          const isExist = data.rowCount;
+          if (isExist) {
+            return Promise.reject();
+          }
+          return false;
+        });
       },
     },
     isEmail: {
