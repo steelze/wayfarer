@@ -10,8 +10,9 @@ export default function (req, res, next) {
   if (!token) return next(ErrorHandler.error('Unauthenticated user', 401));
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    const { id } = decoded;
+    const { id, is_admin } = decoded;
     req.body.user_id = id;
+    req.body.is_admin = is_admin;
     return next();
   } catch (error) {
     return next(ErrorHandler.error(error.message, 401));

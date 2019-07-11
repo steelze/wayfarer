@@ -33,25 +33,24 @@ let admin_token;
 let trip_id;
 
 describe('Test Trip route', () => {
-  before((done) => {
-    QueryBuilder.truncate('users');
-    QueryBuilder.truncate('trips');
-    chai.request(app)
+  before(async () => {
+    await QueryBuilder.truncate('users');
+    await QueryBuilder.truncate('trips');
+    await chai.request(app)
       .post(`${base}auth/signup`)
       .send(user)
-      .end((err, res) => {
+      .then((res) => {
         user_token = res.body.data.token;
         expect(res.status).to.equal(201);
       });
-    chai.request(app)
+    await chai.request(app)
       .post(`${base}auth/signup`)
       .send(admin)
-      .end((err, res) => {
+      .then((res) => {
         admin_token = res.body.data.token;
         expect(res.status).to.equal(201);
-        QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
-        done();
       });
+    await QueryBuilder.update('users', { is_admin: true }, { email: admin.email });
   });
   describe('Test view all trips', () => {
     describe('Unauthenticated users can not view trips', () => {

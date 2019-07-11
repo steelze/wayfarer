@@ -315,7 +315,6 @@ describe('Test Signup route', () => {
           done();
         });
     });
-    afterEach(() => QueryBuilder.truncate('users'));
   });
   describe('Catch error in register control', () => {
     it('should respond with status 500 and error message', (done) => {

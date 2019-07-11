@@ -22,21 +22,28 @@ const booking = {
 let user_token;
 
 describe('Test booking route', () => {
-  before((done) => {
-    QueryBuilder.truncate('users');
-    QueryBuilder.truncate('trips');
-    QueryBuilder.truncate('bookings');
-    chai.request(app)
+  before(async () => {
+    await QueryBuilder.truncate('buses');
+    await QueryBuilder.truncate('users');
+    await QueryBuilder.truncate('trips');
+    await QueryBuilder.truncate('bookings');
+    await chai.request(app)
       .post(`${base}auth/signup`)
       .send(user)
-      .end((err, res) => {
+      .then((res) => {
         user_token = res.body.data.token;
         expect(res.status).to.equal(201);
-        QueryBuilder.insert('trips', {
-          bus_id: 1, origin: 'Ikorodu', destination: 'Maryland', trip_date: '2019-06-27', fare: 123,
-        });
-        done();
       });
+    await QueryBuilder.insert('trips', {
+      bus_id: 1, origin: 'Ikorodu', destination: 'Maryland', trip_date: '2019-06-27', fare: 123,
+    });
+    await QueryBuilder.insert('buses', {
+      number_plate: 'XAS454YR',
+      manufacturer: 'Toyota',
+      model: 'Camry',
+      year: 2015,
+      capacity: 6,
+    });
   });
   describe('Test view all bookings', () => {
     describe('Unauthenticated users can not view bookings', () => {
