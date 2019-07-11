@@ -6,7 +6,19 @@ import QueryBuilder from '../db/QueryBuilder';
  */
 
 export default class BusController {
-  static async view(req, res, next) {  
+  static async view(req, res, next) {
+    try {
+      const data = await QueryBuilder.select('buses');
+      const buses = data.rows;
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          buses,
+        },
+      });
+    } catch (error) {
+      return next(error);
+    }
   }
 
   static async create(req, res, next) {

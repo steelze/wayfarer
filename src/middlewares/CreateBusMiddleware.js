@@ -26,11 +26,11 @@ export default checkSchema({
   manufacturer: {
     in: ['body'],
     exists: {
-      errorMessage: 'Manufactureu is required',
+      errorMessage: 'Manufacturer is required',
     },
     trim: true,
     isEmpty: {
-      errorMessage: 'Manufactureu cannot be empty',
+      errorMessage: 'Manufacturer cannot be empty',
       negated: true,
     },
   },
