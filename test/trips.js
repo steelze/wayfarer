@@ -418,5 +418,19 @@ describe('Test Trip route', () => {
           });
       });
     });
+    describe('User cannot search for trip', () => {
+      it('should respond with status 200', (done) => {
+        chai.request(app)
+          .get(`${base}trips/search`)
+          .query({ origin: trip.origin, destination: trip.destination })
+          .set('Authorization', user_token)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('trips');
+            done();
+          });
+      });
+    });
   });
 });
