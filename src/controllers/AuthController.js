@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Config from '../config/index';
-import ErrorHandler from '../util/ErrorHandler';
+import errorHandler from '../util/ErrorHandler';
 import QueryBuilder from '../db/QueryBuilder';
 
 const { saltRounds, secret: SECRET_KEY } = Config;
@@ -45,9 +45,9 @@ export default class AuthController {
     try {
       const data = await QueryBuilder.select('users', { email });
       const user = data.rows[0];
-      if (!user) return next(ErrorHandler.error('Invalid credentials', 422));
+      if (!user) return next(errorHandler('Invalid credentials', 422));
       const match = await bcrypt.compare(password, user.password);
-      if (!match) return next(ErrorHandler.error('Invalid credentials', 422));
+      if (!match) return next(errorHandler('Invalid credentials', 422));
       const { id, created_at: joined, is_admin } = user;
       const token = AuthController.getToken({ id, email, joined, is_admin });
       return res.status(200).json({

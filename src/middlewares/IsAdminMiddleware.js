@@ -1,6 +1,6 @@
-import ErrorHandler from '../util/ErrorHandler';
+import errorHandler from '../util/ErrorHandler';
 
 export default (req, res, next) => {
   const { is_admin } = req.body;
-  return is_admin ? next() : next(ErrorHandler.error('Unauthorized', 403));
+  return is_admin ? next() : next(errorHandler('Unauthorized', 403));
 };

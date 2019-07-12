@@ -97,6 +97,20 @@ describe('Test booking route', () => {
             done();
           });
       });
+      it('should respond with status 201 and booking data with no seat_number passed', (done) => {
+        chai.request(app)
+          .post(`${base}bookings`)
+          .set('Authorization', user_token)
+          .send({
+            trip_id: 1,
+          })
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body).to.have.property('status', 'success');
+            expect(res.body.data).to.have.property('booking');
+            done();
+          });
+      });
     });
     describe('Authenticated users cannot book an already booked seat', () => {
       it('should respond with status 422 and booking data', (done) => {

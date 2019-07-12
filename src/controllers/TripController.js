@@ -1,5 +1,6 @@
 import QueryBuilder from '../db/QueryBuilder';
-import ErrorHandler from '../util/ErrorHandler';
+import errorHandler from '../util/ErrorHandler';
+import { checkTripExist } from '../util/helper';
 
 /**
  * @class TripController
@@ -45,9 +46,8 @@ export default class TripController {
   static async cancel(req, res, next) {
     const { id } = req.params;
     try {
-      const query = await QueryBuilder.select('trips', { id });
-      const trip = query.rows[0];
-      if (!trip) return next(ErrorHandler.error('Trip not found', 404));
+      const trip = await checkTripExist(id, next);
+      if (!trip) return next(errorHandler('Trip not found', 404));
       await QueryBuilder.update('trips', { status: 0 }, { id });
       return res.status(200).json({
         status: 'success',
@@ -71,7 +71,7 @@ export default class TripController {
       } else if (destination) {
         query = await QueryBuilder.raw('SELECT * from trips WHERE destination ILIKE $1', [destination]);
       } else {
-        return next(ErrorHandler.error('Origin or destination required', 422));
+        return next(errorHandler('Origin or destination required', 422));
       }
       const trips = query.rows;
       return res.status(200).json({
