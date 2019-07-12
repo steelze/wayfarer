@@ -17,7 +17,7 @@ QueryBuilder.insert('buses', {
 });
 
 QueryBuilder.update('users', {
-  is_admin: true',
+  is_admin: true,
  }, {
   email: 'admin@wayfarer.com',
 });
