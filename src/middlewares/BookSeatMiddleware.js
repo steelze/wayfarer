@@ -3,6 +3,7 @@ import { checkSchema } from 'express-validator';
 export default checkSchema({
   seat_number: {
     in: ['body'],
+    optional: { options: { nullable: true } },
     exists: {
       errorMessage: 'Seat Number is required',
     },
