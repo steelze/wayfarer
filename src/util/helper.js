@@ -12,6 +12,11 @@ const checkTripExist = (id, next) => QueryBuilder.select('trips', { id }).then((
   return (trip) || false;
 }).catch(/* istanbul ignore next */ error => next(error));
 
+const checkBusExist = (id, next) => QueryBuilder.select('buses', { id }).then((data) => {
+  const bus = data.rows[0];
+  return (bus) || false;
+}).catch(/* istanbul ignore next */ error => next(error));
+
 const findAvailableSeats = (trip_id, bus_id, next) => busCapacity(bus_id, next)
   .then(data => data.capacity)
   .then(capacity => QueryBuilder.raw('SELECT seat_number FROM bookings where trip_id = $1', [trip_id])
@@ -49,5 +54,5 @@ const generateSeatNumber = (trip, next) => {
 };
 
 export {
-  isSeatAvailable, checkTripExist, busCapacity, generateSeatNumber, isSpaceAvailable,
+  isSeatAvailable, checkTripExist, busCapacity, generateSeatNumber, isSpaceAvailable, checkBusExist,
 };

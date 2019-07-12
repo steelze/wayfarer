@@ -1,6 +1,6 @@
 import QueryBuilder from '../db/QueryBuilder';
 import errorHandler from '../util/ErrorHandler';
-import { checkTripExist } from '../util/helper';
+import { checkTripExist, checkBusExist } from '../util/helper';
 
 /**
  * @class TripController
@@ -28,6 +28,8 @@ export default class TripController {
       bus_id, origin, destination, trip_date, fare,
     } = req.body;
     try {
+      if (!(await checkBusExist(bus_id, next))) return next(errorHandler('Bus not found', 422));
+
       const data = await QueryBuilder.insert('trips', {
         bus_id, origin, destination, trip_date, fare,
       });

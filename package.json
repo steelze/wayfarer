@@ -9,9 +9,11 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start-dev": "nodemon --exec babel-node ./src/app.js",
     "migration": "babel-node src/db/migration.js",
+    "rollback": "babel-node src/db/rollback.js && npm run migration",
     "refresh": "babel-node src/db/refresh.js",
     "seed": "babel-node src/db/seed.js",
     "migration-live": "node dist/db/migration.js",
+    "rollback-live": "node dist/db/rollback.js && npm run migration-live",
     "refresh-live": "node dist/db/refresh.js",
     "seed-live": "node dist/db/seed.js",
     "start": "node dist/app.js"

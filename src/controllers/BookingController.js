@@ -12,10 +12,8 @@ import {
 export default class BookingController {
   static async view(req, res, next) {
     try {
-      const { user_id } = req.body;
-      const query = await QueryBuilder.select('users', { id: user_id, is_admin: true });
-      const user = query.rows[0];
-      const data = (user) ? await QueryBuilder.raw(`SELECT bookings.id AS booking_id, trip_id, user_id, seat_number, trips.bus_id, trips.trip_date, users.first_name, users.last_name, users.email FROM bookings INNER JOIN trips on bookings.trip_id = trips.id 
+      const { user_id, is_admin } = req.body;
+      const data = (is_admin) ? await QueryBuilder.raw(`SELECT bookings.id AS booking_id, trip_id, user_id, seat_number, trips.bus_id, trips.trip_date, users.first_name, users.last_name, users.email FROM bookings INNER JOIN trips on bookings.trip_id = trips.id 
       LEFT JOIN users on bookings.user_id = users.id`) : await QueryBuilder.raw('SELECT bookings.id AS booking_id, trip_id, user_id, seat_number, trips.bus_id, trips.trip_date, users.first_name, users.last_name, users.email FROM bookings INNER JOIN trips on bookings.trip_id = trips.id LEFT JOIN users on bookings.user_id = users.id  WHERE bookings.user_id = $1 ', [user_id]);
       const bookings = data.rows;
       return res.status(200).json({
