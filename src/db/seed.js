@@ -15,3 +15,9 @@ QueryBuilder.insert('buses', {
   year: '2017',
   capacity: 5,
 });
+
+QueryBuilder.update('users', {
+  is_admin: true',
+ }, {
+  email: 'admin@wayfarer.com',
+});
