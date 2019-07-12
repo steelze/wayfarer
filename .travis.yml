@@ -5,9 +5,9 @@ cache: npm
 services:
   - postgresql
 env:
-  - DB_USER=admin1 DB_PASS=admin@123 DB_NAME=wayfarer DB_HOST=127.0.0.1 DB_PORT=5432 JWT_SECRET=Q0Jy4ulhlY1uWRuYkiFWnlTAuOXxOCgc SALT_ROUNDS=10
+  - DB_USER=test123 DB_PASS=testing@123 DB_NAME=wayfarer DB_HOST=127.0.0.1 DB_PORT=5432 JWT_SECRET=THISISAFAKESecret123 SALT_ROUNDS=5
 before_script:
-  - psql -c "create USER admin1 WITH PASSWORD 'admin@123';" -U postgres
+  - psql -c "create USER test123 WITH PASSWORD 'testing@123';" -U postgres
   - psql -c "create database wayfarer;" -U postgres
   - npm run migration
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

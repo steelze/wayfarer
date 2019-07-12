@@ -44,11 +44,18 @@ export default class QueryBuilder {
     this.query = this.query.replace(/,\s*$/, '');
     this.query += ')';
     Pool.query(this.query);
+    return this;
   }
 
   static truncate(table) {
     if (!table) return false;
     const text = `TRUNCATE ${table} RESTART IDENTITY`;
+    return Pool.query(text);
+  }
+
+  static drop(table) {
+    if (!table) return false;
+    const text = `DROP TABLE IF EXISTS ${table} CASCADE`;
     return Pool.query(text);
   }
 
@@ -121,5 +128,16 @@ export default class QueryBuilder {
 
   static raw(query, values) {
     return Pool.query(query, values);
+  }
+
+  static fk(options) {
+    if (!this.table) return false;
+    return options.forEach((option) => {
+      const {
+        tag, ref_table: table, ref_column: column, name,
+      } = option;
+      const query = `ALTER TABLE ${this.table} ADD CONSTRAINT ${tag} FOREIGN KEY (${name}) REFERENCES ${table} (${column})`;
+      return Pool.query(query);
+    });
   }
 }
