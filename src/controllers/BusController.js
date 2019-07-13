@@ -12,9 +12,7 @@ export default class BusController {
       const buses = data.rows;
       return res.status(200).json({
         status: 'success',
-        data: {
-          buses,
-        },
+        data: buses,
       });
     } catch (error) {
       return next(error);
@@ -32,9 +30,7 @@ export default class BusController {
       const bus = data.rows[0];
       return res.status(201).json({
         status: 'success',
-        data: {
-          bus,
-        },
+        data: bus,
       });
     } catch (error) {
       return next(error);

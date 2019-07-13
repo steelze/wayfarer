@@ -36,9 +36,7 @@ export default class TripController {
       const trip = data.rows[0];
       return res.status(201).json({
         status: 'success',
-        data: {
-          trip,
-        },
+        data: trip,
       });
     } catch (error) {
       return next(error);
@@ -78,9 +76,7 @@ export default class TripController {
       const trips = query.rows;
       return res.status(200).json({
         status: 'success',
-        data: {
-          trips,
-        },
+        data: trips,
       });
     } catch (error) {
       return next(error);

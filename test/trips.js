@@ -93,7 +93,6 @@ describe('Test Trip route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('trips');
             done();
           });
       });
@@ -414,8 +413,8 @@ describe('Test Trip route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('trip');
-            trip_id = res.body.data.trip.id;
+            expect(res.body.data).to.have.property('id');
+            trip_id = res.body.data.id;
             done();
           });
       });
@@ -455,7 +454,6 @@ describe('Test Trip route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('trips');
             done();
           });
       });
