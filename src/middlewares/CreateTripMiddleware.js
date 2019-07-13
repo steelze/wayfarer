@@ -45,7 +45,6 @@ export default checkSchema({
       errorMessage: 'Trip date cannot be empty',
       negated: true,
     },
-    toDate: true,
   },
   fare: {
     in: ['body'],

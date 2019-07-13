@@ -24,7 +24,7 @@ QueryBuilder.schema('trips').create({
   bus_id: 'INT NOT NULL',
   origin: 'VARCHAR(100) NOT NULL',
   destination: 'VARCHAR(100) UNIQUE NOT NULL',
-  trip_date: 'DATE NOT NULL',
+  trip_date: 'VARCHAR(100) NOT NULL',
   fare: 'FLOAT NOT NULL',
   status: 'BOOLEAN DEFAULT TRUE',
 }).fk([
