@@ -249,28 +249,6 @@ describe('Test Trip route', () => {
               done();
             });
         });
-        it('should respond with error for invalid trip date field', (done) => {
-          chai.request(app)
-            .post(`${base}trips`)
-            .set('Authorization', `Bearer ${admin_token}`)
-            .send({
-              bus_id: 6,
-              origin: 'Ikorodu',
-              destination: 'Maryland',
-              trip_date: 'HelloWorld',
-              fare: 123,
-            })
-            .end((err, res) => {
-              expect(res.status).to.equal(422);
-              expect(res.body).to.have.property('status', 'error');
-              expect(res.body).to.have.property('error');
-              const data = JSON.parse(res.body.error);
-              const error = data.find(key => key.field === 'trip_date');
-              expect(data).to.be.an('array');
-              expect(error).to.be.an('object');
-              done();
-            });
-        });
       });
       describe('Test fare field', () => {
         it('should respond with error for missing fare field', (done) => {
