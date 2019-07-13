@@ -361,48 +361,6 @@ describe('Test Trip route', () => {
             });
         });
       });
-      describe('Cannot create trip with non existing bus', () => {
-        it('should respond with error for non existing bus id', (done) => {
-          chai.request(app)
-            .post(`${base}trips`)
-            .set('Authorization', `Bearer ${admin_token}`)
-            .send({
-              bus_id: 987,
-              origin: 'Lekki',
-              destination: 'Maryland',
-              trip_date: '2019-06-27',
-              fare: 500,
-            })
-            .end((err, res) => {
-              expect(res.status).to.equal(422);
-              expect(res.body).to.have.property('status', 'error');
-              expect(res.body).to.have.property('error');
-              done();
-            });
-        });
-        it('should respond with error for empty origin field', (done) => {
-          chai.request(app)
-            .post(`${base}trips`)
-            .set('Authorization', `Bearer ${admin_token}`)
-            .send({
-              bus_id: 9,
-              origin: '',
-              destination: 'Maryland',
-              trip_date: '2019-06-27',
-              fare: 123,
-            })
-            .end((err, res) => {
-              expect(res.status).to.equal(422);
-              expect(res.body).to.have.property('status', 'error');
-              expect(res.body).to.have.property('error');
-              const data = JSON.parse(res.body.error);
-              const error = data.find(key => key.field === 'origin');
-              expect(data).to.be.an('array');
-              expect(error).to.be.an('object');
-              done();
-            });
-        });
-      });
     });
     describe('Admin can create trip', () => {
       it('should respond with status 201 and trip data', (done) => {
