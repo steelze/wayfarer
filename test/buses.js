@@ -82,7 +82,6 @@ describe('Test Buses route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('buses');
             done();
           });
       });
@@ -361,12 +360,11 @@ describe('Test Buses route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('bus');
-            expect(res.body.data.bus.number_plate).to.equal(bus.number_plate);
-            expect(res.body.data.bus.manufacturer).to.equal(bus.manufacturer);
-            expect(res.body.data.bus.model).to.equal(bus.model);
-            expect(res.body.data.bus.year).to.equal(bus.year);
-            expect(res.body.data.bus.capacity).to.equal(bus.capacity);
+            expect(res.body.data.number_plate).to.equal(bus.number_plate);
+            expect(res.body.data.manufacturer).to.equal(bus.manufacturer);
+            expect(res.body.data.model).to.equal(bus.model);
+            expect(res.body.data.year).to.equal(bus.year);
+            expect(res.body.data.capacity).to.equal(bus.capacity);
             done();
           });
       });

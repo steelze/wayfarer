@@ -18,9 +18,7 @@ export default class BookingController {
       const bookings = data.rows;
       return res.status(200).json({
         status: 'success',
-        data: {
-          bookings,
-        },
+        data: bookings,
       });
     } catch (error) {
       return next(error);
@@ -77,9 +75,7 @@ export default class BookingController {
       const booking = Object.assign({}, trip, data.rows[0]);
       return res.status(201).json({
         status: 'success',
-        data: {
-          booking,
-        },
+        data: booking,
       });
     } catch (error) {
       return next(error);

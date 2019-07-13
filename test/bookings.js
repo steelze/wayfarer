@@ -77,7 +77,6 @@ describe('Test booking route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('bookings');
             done();
           });
       });
@@ -93,7 +92,6 @@ describe('Test booking route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('booking');
             done();
           });
       });
@@ -107,7 +105,6 @@ describe('Test booking route', () => {
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body).to.have.property('status', 'success');
-            expect(res.body.data).to.have.property('booking');
             done();
           });
       });
