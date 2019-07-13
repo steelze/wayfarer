@@ -68,11 +68,15 @@ export default class BookingController {
 
   static async bookTrip(trip, seat_number, user_id, res, next) {
     try {
-      const { id: trip_id } = trip;
+      const query = await QueryBuilder.select('users', { id: user_id });
+      const {first_name, last_name, email} = query.rows[0];
+      const { id: trip_id, trip_date, bus_id } = trip;
       const data = await QueryBuilder.insert('bookings', {
         user_id, trip_id, seat_number,
       });
-      const booking = Object.assign({}, trip, data.rows[0]);
+      const booking = Object.assign({}, {
+        first_name, last_name, email, trip_date, bus_id,
+      }, data.rows[0]);
       return res.status(201).json({
         status: 'success',
         data: booking,

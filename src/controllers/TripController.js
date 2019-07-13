@@ -14,9 +14,7 @@ export default class TripController {
       const trips = data.rows;
       return res.status(200).json({
         status: 'success',
-        data: {
-          trips,
-        },
+        data: trips,
       });
     } catch (error) {
       return next(error);
