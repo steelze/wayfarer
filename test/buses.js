@@ -65,7 +65,7 @@ describe('Test Buses route', () => {
       it('should respond with status 403 and error message', (done) => {
         chai.request(app)
           .get(`${base}buses`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(403);
             expect(res.body).to.have.property('status', 'error');
@@ -78,7 +78,7 @@ describe('Test Buses route', () => {
       it('should respond with status 200 and error message', (done) => {
         chai.request(app)
           .get(`${base}buses`)
-          .set('Authorization', admin_token)
+          .set('Authorization', `Bearer ${admin_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -93,7 +93,7 @@ describe('Test Buses route', () => {
       it('should respond with status 403 and error message', (done) => {
         chai.request(app)
           .post(`${base}buses`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send(bus)
           .end((err, res) => {
             expect(res.status).to.equal(403);
@@ -108,7 +108,7 @@ describe('Test Buses route', () => {
         it('should respond with error for missing number plate field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               manufacturer: 'Toyota',
               model: 'Camry',
@@ -129,7 +129,7 @@ describe('Test Buses route', () => {
         it('should respond with error for empty number plate field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: '',
               manufacturer: 'Toyota',
@@ -153,7 +153,7 @@ describe('Test Buses route', () => {
         it('should respond with error for missing manufacturer field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR435HG',
               model: 'Camry',
@@ -174,7 +174,7 @@ describe('Test Buses route', () => {
         it('should respond with error for empty manufacturer field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR456GF',
               manufacturer: '',
@@ -198,7 +198,7 @@ describe('Test Buses route', () => {
         it('should respond with error for missing model field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR456GF',
               manufacturer: 'Toyota',
@@ -219,7 +219,7 @@ describe('Test Buses route', () => {
         it('should respond with error for empty model field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR456GF',
               manufacturer: 'Toyota',
@@ -243,7 +243,7 @@ describe('Test Buses route', () => {
         it('should respond with error for missing year field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR456GF',
               manufacturer: 'Toyota',
@@ -264,7 +264,7 @@ describe('Test Buses route', () => {
         it('should respond with error for empty year field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR675GH',
               manufacturer: 'Toyota',
@@ -286,7 +286,7 @@ describe('Test Buses route', () => {
         it('should respond with error for invalid year field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR675GH',
               manufacturer: 'Toyota',
@@ -310,7 +310,7 @@ describe('Test Buses route', () => {
         it('should respond with error for missing capacity field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'VAR456GF',
               manufacturer: 'Toyota',
@@ -331,7 +331,7 @@ describe('Test Buses route', () => {
         it('should respond with error for empty capacity field', (done) => {
           chai.request(app)
             .post(`${base}buses`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               number_plate: 'GHA564TH',
               manufacturer: 'Toyota',
@@ -356,7 +356,7 @@ describe('Test Buses route', () => {
       it('should respond with status 201 and bus data', (done) => {
         chai.request(app)
           .post(`${base}buses`)
-          .set('Authorization', admin_token)
+          .set('Authorization', `Bearer ${admin_token}`)
           .send(bus)
           .end((err, res) => {
             expect(res.status).to.equal(201);

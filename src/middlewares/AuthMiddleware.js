@@ -5,8 +5,13 @@ import errorHandler from '../util/ErrorHandler';
 
 const { secret: SECRET_KEY } = Config;
 
+const getToken = (bearer) => {
+  if (!bearer) return false;
+  return bearer.split(' ')[1];
+};
+
 export default function (req, res, next) {
-  const token = req.headers.authorization;
+  const token = getToken(req.headers.authorization);
   if (!token) return next(errorHandler('Unauthenticated user', 401));
   try {
     const decoded = jwt.verify(token, SECRET_KEY);

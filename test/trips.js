@@ -89,7 +89,7 @@ describe('Test Trip route', () => {
       it('should respond with status 200 and all trips data', (done) => {
         chai.request(app)
           .get(`${base}trips`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -104,7 +104,7 @@ describe('Test Trip route', () => {
       it('should respond with status 403 and error message', (done) => {
         chai.request(app)
           .post(`${base}trips`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send(trip)
           .end((err, res) => {
             expect(res.status).to.equal(403);
@@ -119,7 +119,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing bus id field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               origin: 'Ikorodu',
               destination: 'Maryland',
@@ -140,7 +140,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty bus id field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: '',
               origin: 'Ikorodu',
@@ -164,7 +164,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing destination field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 4,
               origin: 'Ikorodu',
@@ -185,7 +185,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty destination field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 3,
               origin: 'Ikorodu',
@@ -209,7 +209,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 1,
               origin: 'Ikorodu',
@@ -230,7 +230,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -252,7 +252,7 @@ describe('Test Trip route', () => {
         it('should respond with error for invalid trip date field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -276,7 +276,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 1,
               origin: 'Ikorodu',
@@ -297,7 +297,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -319,7 +319,7 @@ describe('Test Trip route', () => {
         it('should respond with error for invalid fare field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 6,
               origin: 'Ikorodu',
@@ -343,7 +343,7 @@ describe('Test Trip route', () => {
         it('should respond with error for missing origin field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 4,
               destination: 'Maryland',
@@ -364,7 +364,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty origin field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 9,
               origin: '',
@@ -388,7 +388,7 @@ describe('Test Trip route', () => {
         it('should respond with error for non existing bus id', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 987,
               origin: 'Lekki',
@@ -406,7 +406,7 @@ describe('Test Trip route', () => {
         it('should respond with error for empty origin field', (done) => {
           chai.request(app)
             .post(`${base}trips`)
-            .set('Authorization', admin_token)
+            .set('Authorization', `Bearer ${admin_token}`)
             .send({
               bus_id: 9,
               origin: '',
@@ -431,7 +431,7 @@ describe('Test Trip route', () => {
       it('should respond with status 201 and trip data', (done) => {
         chai.request(app)
           .post(`${base}trips`)
-          .set('Authorization', admin_token)
+          .set('Authorization', `Bearer ${admin_token}`)
           .send(trip)
           .end((err, res) => {
             expect(res.status).to.equal(201);
@@ -446,7 +446,7 @@ describe('Test Trip route', () => {
       it('should respond with status 200', (done) => {
         chai.request(app)
           .patch(`${base}trips/${trip_id}`)
-          .set('Authorization', admin_token)
+          .set('Authorization', `Bearer ${admin_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -459,7 +459,7 @@ describe('Test Trip route', () => {
       it('should respond with status 403', (done) => {
         chai.request(app)
           .patch(`${base}trips/${trip_id}`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(403);
             expect(res.body).to.have.property('status', 'error');
@@ -473,7 +473,7 @@ describe('Test Trip route', () => {
         chai.request(app)
           .get(`${base}trips/search`)
           .query({ origin: trip.origin, destination: trip.destination })
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -484,7 +484,7 @@ describe('Test Trip route', () => {
       it('should respond with error for no query string passed', (done) => {
         chai.request(app)
           .get(`${base}trips/search`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
