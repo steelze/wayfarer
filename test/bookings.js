@@ -60,7 +60,7 @@ describe('Test booking route', () => {
       it('should respond with status 401 and error message for invalid token', (done) => {
         chai.request(app)
           .get(`${base}bookings`)
-          .set('Authorization', 'ThisIsAnInvalidToken')
+          .set('Authorization', 'Bearer ThisIsAnInvalidToken')
           .end((err, res) => {
             expect(res.status).to.equal(401);
             expect(res.body).to.have.property('status', 'error');
@@ -73,7 +73,7 @@ describe('Test booking route', () => {
       it('should respond with status 200 and all bookings data', (done) => {
         chai.request(app)
           .get(`${base}bookings`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .end((err, res) => {
             expect(res.status).to.equal(200);
             expect(res.body).to.have.property('status', 'success');
@@ -88,7 +88,7 @@ describe('Test booking route', () => {
       it('should respond with status 201 and booking data', (done) => {
         chai.request(app)
           .post(`${base}bookings`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send(booking)
           .end((err, res) => {
             expect(res.status).to.equal(201);
@@ -100,7 +100,7 @@ describe('Test booking route', () => {
       it('should respond with status 201 and booking data with no seat_number passed', (done) => {
         chai.request(app)
           .post(`${base}bookings`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send({
             trip_id: 1,
           })
@@ -116,7 +116,7 @@ describe('Test booking route', () => {
       it('should respond with status 422 and booking data', (done) => {
         chai.request(app)
           .post(`${base}bookings`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send(booking)
           .end((err, res) => {
             expect(res.status).to.equal(422);
@@ -130,7 +130,7 @@ describe('Test booking route', () => {
       it('should respond with status 404', (done) => {
         chai.request(app)
           .post(`${base}bookings`)
-          .set('Authorization', user_token)
+          .set('Authorization', `Bearer ${user_token}`)
           .send({
             seat_number: 1,
             trip_id: 1000009,
@@ -148,7 +148,7 @@ describe('Test booking route', () => {
     it('should respond with status 200', (done) => {
       chai.request(app)
         .delete(`${base}bookings/1`)
-        .set('Authorization', user_token)
+        .set('Authorization', `Bearer ${user_token}`)
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property('status', 'success');

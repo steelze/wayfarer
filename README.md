@@ -20,6 +20,7 @@ WayFarer is a public bus transportation booking server. It allows admins to mana
 ## Technology Stack
   - [Node.js](https://nodejs.org/)
   - [Express](https://expressjs.com/)
+  - [PostgreSQL](https://www.postgresql.org/)
   - [Express-Validator](https://www.npmjs.com/package/express-validator)
   - [Babel](https://babeljs.io) 
   - [Eslint](https://eslint.org/)
@@ -81,7 +82,9 @@ These instructions will get you a copy of the project up and running on your loc
     $ npm install
     ```
   - Duplicate and save .env.example as .env and fill in environment variables
-
+    ```
+    $ npm run migration
+    ```
   ### Run The Service
   ```
   $ npm run start-dev
