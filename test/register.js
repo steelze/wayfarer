@@ -30,10 +30,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'first_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -50,10 +46,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'first_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -70,10 +62,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'first_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -91,10 +79,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'last_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -111,10 +95,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'last_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -131,10 +111,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'last_name');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -152,10 +128,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -172,10 +144,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -192,10 +160,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -212,10 +176,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -247,10 +207,6 @@ describe('Test Signup route', () => {
               expect(res.status).to.equal(422);
               expect(res.body).to.have.property('status', 'error');
               expect(res.body).to.have.property('error');
-              const data = JSON.parse(res.body.error);
-              const error = data.find(key => key.field === 'email');
-              expect(data).to.be.an('array');
-              expect(error).to.be.an('object');
               done();
             });
         });
@@ -269,10 +225,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'password');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -289,10 +241,6 @@ describe('Test Signup route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'password');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -312,24 +260,6 @@ describe('Test Signup route', () => {
           expect(res.body.data.user.email).to.equal(user.email);
           expect(res.body.data.user.first_name).to.equal(user.first_name);
           expect(res.body.data.user.last_name).to.equal(user.last_name);
-          done();
-        });
-    });
-  });
-  describe('Catch error in register control', () => {
-    it('should respond with status 500 and error message', (done) => {
-      chai.request(app)
-        .post(`${base}auth/signup`)
-        .send({
-          first_name: 'Jeffery',
-          last_name: 'Way',
-          email: 'user@app.com',
-          password: 123456,
-        })
-        .end((err, res) => {
-          expect(res.status).to.equal(500);
-          expect(res.body).to.have.property('status', 'error');
-          expect(res.body).to.have.property('error');
           done();
         });
     });

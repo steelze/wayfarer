@@ -17,6 +17,7 @@ export default checkSchema({
   },
   password: {
     in: ['body'],
+    trim: true,
     exists: {
       errorMessage: 'Password is required',
     },

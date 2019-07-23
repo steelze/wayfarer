@@ -26,10 +26,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -44,10 +40,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -62,10 +54,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -80,10 +68,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'email');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -114,10 +98,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'password');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -132,10 +112,6 @@ describe('Test Login route', () => {
             expect(res.status).to.equal(422);
             expect(res.body).to.have.property('status', 'error');
             expect(res.body).to.have.property('error');
-            const data = JSON.parse(res.body.error);
-            const error = data.find(key => key.field === 'password');
-            expect(data).to.be.an('array');
-            expect(error).to.be.an('object');
             done();
           });
       });
@@ -182,37 +158,6 @@ describe('Test Login route', () => {
           expect(res.body.data).to.have.all.keys('token', 'user');
           expect(res.body.data.user).to.have.any.keys('id', 'email', 'first_name', 'last_name', 'is_admin');
           expect(res.body.data.user.email).to.equal(user.email);
-          done();
-        });
-    });
-    afterEach(() => QueryBuilder.truncate('users'));
-  });
-  describe('Catch error in signin controlller', () => {
-    beforeEach((done) => {
-      chai.request(app)
-        .post(`${base}auth/signup`)
-        .send({
-          first_name: 'Way',
-          last_name: 'Jeff',
-          email: 'admin@blog.com',
-          password: '123456',
-        })
-        .end((err, res) => {
-          expect(res.status).to.equal(201);
-          done();
-        });
-    });
-    it('should respond with status 500 and error message', (done) => {
-      chai.request(app)
-        .post(`${base}auth/signin`)
-        .send({
-          email: 'admin@blog.com',
-          password: 123456,
-        })
-        .end((err, res) => {
-          expect(res.status).to.equal(500);
-          expect(res.body).to.have.property('status', 'error');
-          expect(res.body).to.have.property('error');
           done();
         });
     });

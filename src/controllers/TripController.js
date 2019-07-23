@@ -1,6 +1,6 @@
 import QueryBuilder from '../db/QueryBuilder';
 import errorHandler from '../util/ErrorHandler';
-import { checkTripExist, checkBusExist } from '../util/helper';
+import { checkTripExist } from '../util/helper';
 
 /**
  * @class TripController
