@@ -20,7 +20,7 @@ app.use(base_url, trips);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger_doc));
 
 app.use((req, res, next) => {
-  const err = new Error('No Route Match Found');
+  const err = new Error('Route not found');
   err.status = 404;
   next(err);
 });

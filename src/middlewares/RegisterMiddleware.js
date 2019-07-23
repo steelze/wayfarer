@@ -64,6 +64,7 @@ export default checkSchema({
     exists: {
       errorMessage: 'Password is required',
     },
+    trim: true,
     isEmpty: {
       errorMessage: 'Password cannot be empty',
       negated: true,
